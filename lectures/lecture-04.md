@@ -25,3 +25,8 @@ $56 \cdot 10^9 = 4 \cdot (-1) = -4$ \
 $34 \cdot 10^{11} = (-5) \cdot (-9) = 6$ \
 $12 \cdot 10^{13} = 1 \cdot 3 = 3$ \
 $9 \cdot 10^{15} = (-4) \cdot (-1) = 4$
+
+Пример:
+
+$876543210 \equiv 4 \in \mathbb{Z}$ \
+$876543210 \rightarrow ((((((8 \cdot 9 + 7) \cdot 9 + 6) \cdot 9 + 5) \cdot 9 + 4) \cdot 9 + 3) \cdot 9 + 2) \cdot 9 + 1$
