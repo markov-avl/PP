@@ -3,11 +3,9 @@
 #include "performance.h"
 #include <iostream>
 #include <iomanip>
-#include "num_threads.h"
 
 int main(int argc, char **argv) {
     std::cout << "Correctness tests" << std::endl;
-    //set_num_threads(1);
     for (std::size_t iTest = 0; iTest < test_data_count; ++iTest) {
         std::cout << "Test " << iTest;
         if (test_data[iTest].result != vector_mod(test_data[iTest].dividend, test_data[iTest].dividend_size,
@@ -17,9 +15,10 @@ int main(int argc, char **argv) {
         }
         std::cout << " - OK" << std::endl;
     }
-    std::cout << "==Performance tests. ";
+
+    std::cout << "Performance tests. ";
     const auto measurements = run_experiments();
-    std::cout << "Done==\n";
+    std::cout << " Done\n";
     std::cout << std::setfill(' ') << std::setw(2) << "T:" << " |" << std::setw(3 + 2 * sizeof(IntegerWord)) << "Value:"
             << " | "
             << std::setw(14) << "Duration, ms:" << " | Acceleration:\n";
