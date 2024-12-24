@@ -32,3 +32,7 @@ add_executable(ParallelMod
         parallel_mod/vector_mod.cpp
         parallel_mod/entrypoint.cpp
 )
+
+add_executable(FFT
+        fft/entrypoint.cpp
+)
