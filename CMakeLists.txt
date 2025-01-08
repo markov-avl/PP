@@ -35,4 +35,17 @@ add_executable(ParallelMod
 
 add_executable(FFT
         fft/entrypoint.cpp
+        fft/implementations.cpp
+        fft/implementations.h
+        fft/bit_shuffle.h
 )
+
+add_executable(FFTTests
+        fft/tests.cpp
+        fft/implementations.cpp
+        fft/implementations.h
+        fft/bit_shuffle.h
+)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lfftw3 -lm")
+target_link_libraries(FFTTests PRIVATE fftw3 m)
+target_link_libraries(FFTTests PRIVATE fftw3 m)

@@ -1,81 +1,69 @@
-#include <complex>
-#include <bit>
-#include <bitset>
 #include <iostream>
+#include <complex>
 #include <vector>
+#include <chrono>
+#include <iomanip>
+#include <stdexcept>
 
-void bit_shuffle(const std::complex<double> *in, std::complex<double> *out, const size_t n) {
-    // Определяем количество битов для реверса
-    const size_t log2_n = std::countr_zero(n);
+#include "implementations.h"
 
-    // Проверяем, что n является степенью двойки
-    if (1u << log2_n != n) {
-        throw std::invalid_argument("Размер n должен быть степенью двойки.");
+using namespace std;
+using namespace chrono;
+
+void run_experiments(size_t max_power) {
+    vector<string> algorithm_names = {
+        "Recursive",
+        "Recursive Stepped",
+        "Recursive Tasked",
+        "Iterative",
+        "Iterative Parallel"
+    };
+
+    cout << left << setw(15) << "Size";
+    for (const auto& name : algorithm_names) {
+        cout << setw(20) << name;
     }
+    cout << endl;
+    cout << string(15 + algorithm_names.size() * 20, '-') << endl;
 
-    // Выполняем перестановку в порядке битового реверса
-    for (size_t i = 0; i < n; ++i) {
-        const size_t reversed_index = std::bitset<sizeof(size_t) * 8>(i).to_ulong() >> sizeof(size_t) * 8 - log2_n;
-        out[reversed_index] = in[i];
-    }
-}
+    for (size_t power = 1; power <= max_power; ++power) {
+        size_t n = 1 << power;
+        vector<Complex> input(n), output(n);
 
-// равзернуть рекурсию в цикл
-void fft(const std::complex<double> *input, std::complex<double> *output, const size_t n) {
-    if (n == 1) {
-        output[0] = input[0];
-        return;
-    }
+        for (size_t i = 0; i < n; ++i) {
+            input[i] = Complex(static_cast<double>(i), 0.0);
+        }
 
-    bit_shuffle(input, output, n);
+        cout << left << setw(15) << n;
 
-    fft(input, output, n / 2);
-    fft(input + n / 2, output + n / 2, n / 2);
+        for (int alg = RECURSIVE; alg <= ITERATIVE_PARALLEL; ++alg) {
+            auto start_time = high_resolution_clock::now();
 
-    for (std::size_t i = 0; i < n / 2; i++) {
-        auto W = std::polar(1.0, -2.0 * i * std::numbers::pi_v<double> / n);
-        auto t1 = output[i];
-        auto t2 = output[i + n / 2];
-        output[i] = t1 + W * t2;
-        output[i + n / 2] = t1 - W * t2;
-    }
-}
+            try {
+                fft(input.data(), output.data(), n, static_cast<Algorithm>(alg));
+            } catch (const exception& e) {
+                cerr << "Error in algorithm " << algorithm_names[alg] << ": " << e.what() << endl;
+                continue;
+            }
 
-// равзернуть рекурсию в цикл
-void fft_par(const std::complex<double> *input, std::complex<double> *output, const size_t n) {
-    if (n == 1) {
-        output[0] = input[0];
-        return;
-    }
+            auto end_time = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(end_time - start_time).count();
 
-    bit_shuffle(input, output, n);
+            cout << setw(20) << duration;
+        }
 
-#pragma omp task
-    fft(input, output, n / 2);
-#pragma omp task
-    fft(input + n / 2, output + n / 2, n / 2);
-#pragma omp taskwait
-
-    for (std::size_t i = 0; i < n / 2; i++) {
-        auto W = std::polar(1.0, -2.0 * i * std::numbers::pi_v<double> / n);
-        auto t1 = output[i];
-        auto t2 = output[i + n / 2];
-        output[i] = t1 + W * t2;
-        output[i + n / 2] = t1 - W * t2;
+        cout << endl;
     }
 }
 
-int main(int args, char **argv) {
-    // constexpr size_t n = 1u << 8;
-    constexpr size_t n = 10;
-    std::vector<double> original(n), spectre(n), restored(n);
+int main() {
+    size_t max_power = 22; // Максимальная степень 2
 
-    for (size_t i = 0; i < n / 2; ++i) {
-        original[i] = static_cast<double>(i);
-        original[n - i - 1] = original[i];
+    try {
+        run_experiments(max_power);
+    } catch (const exception& e) {
+        cerr << "Error: " << e.what() << endl;
     }
 
-    for (size_t i = 0; i < n; ++i)
-        std::cout << original[i] << " " << std::endl; {
-    }
+    return 0;
 }
