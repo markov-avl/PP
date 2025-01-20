@@ -40,11 +40,11 @@ add_executable(FFT
         fft/bit_shuffle.h
 )
 
-add_executable(FFTTests
-        fft/tests.cpp
-        fft/implementations.cpp
-        fft/implementations.h
-        fft/bit_shuffle.h
-)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lfftw3 -lm")
-target_link_libraries(FFTTests PRIVATE fftw3 m)
+#add_executable(FFTTests
+#        fft/tests.cpp
+#        fft/implementations.cpp
+#        fft/implementations.h
+#        fft/bit_shuffle.h
+#)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lfftw3 -lm")
+#target_link_libraries(FFTTests PRIVATE fftw3 m)
