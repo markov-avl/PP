@@ -15,7 +15,7 @@ double f(double x) {
 double integrate(double a, double b) {
     double dx = (b - a) / N;
     double sum = 0.0;
-    for (long long i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
         sum += f(a + i * dx);
     }
     return sum * dx;
@@ -60,10 +60,10 @@ double integrate_omp_reduction(double a, double b) {
 
 // Измеряем время работы (возвращает время в секундах)
 double measure_time(double (*func)(double, double)) {
-    double start = omp_get_wtime();
+    const double start = omp_get_wtime();
     // Запускаем функцию интегрирования
-    volatile double result = func(-1.0, 1.0);
-    double end = omp_get_wtime();
+    func(-1.0, 1.0);
+    const double end = omp_get_wtime();
     return end - start;
 }
 
@@ -91,8 +91,8 @@ int main() {
         double time_reduct  = measure_time(integrate_omp_reduction);  // с OMP+reduction
 
         // Считаем ускорения
-        double accel_omp    = (time_omp    > 0.0) ? time_serial / time_omp    : 0.0;
-        double accel_reduct = (time_reduct > 0.0) ? time_serial / time_reduct : 0.0;
+        double accel_omp    = time_omp    > 0.0 ? time_serial / time_omp    : 0.0;
+        double accel_reduct = time_reduct > 0.0 ? time_serial / time_reduct : 0.0;
 
         // Выводим строку таблицы
         std::cout << std::setw(2) << T << "  | "

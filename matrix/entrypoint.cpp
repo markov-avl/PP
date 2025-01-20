@@ -9,7 +9,7 @@
 #include "mul.h"
 
 constexpr size_t MAX_EXP = 12;
-constexpr size_t RUNS = 1;
+constexpr size_t RUNS = 10;
 
 // Функция для вычисления среднего времени выполнения (без учета минимума и максимума)
 double calculate_average(std::vector<double> &times) {

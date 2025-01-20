@@ -1,7 +1,5 @@
 #pragma once
 
-#include <new>
-#include <memory>
 #include <thread>
 #include <vector>
 #include <barrier>
@@ -93,4 +91,4 @@ IntegerWord vector_mod(const IntegerWord *V, std::size_t N, IntegerWord mod) {
     }
 
     return partial_results[0].value;
-};
+}

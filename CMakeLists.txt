@@ -48,4 +48,3 @@ add_executable(FFTTests
 )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lfftw3 -lm")
 target_link_libraries(FFTTests PRIVATE fftw3 m)
-target_link_libraries(FFTTests PRIVATE fftw3 m)
