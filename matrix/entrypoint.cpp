@@ -8,6 +8,8 @@
 #include "sum.h"
 #include "mul.h"
 
+// #define AVX512_ON
+
 constexpr size_t MAX_EXP_SUM = 14;
 constexpr size_t MAX_EXP_MUL = 10;
 constexpr size_t RUNS = 5;
@@ -94,7 +96,7 @@ void benchmark() {
             << std::setw(15) << "AVX2"
             << std::setw(20) << "AVX2 Acceleration"
 #endif
-#if defined(__AVX512F__)
+#if defined(__AVX512F__) && defined(AVX512_ON)
               << std::setw(15) << "AVX512"
               << std::setw(20) << "AVX512 Acceleration"
 #endif
@@ -104,7 +106,7 @@ void benchmark() {
 #if defined(__AVX2__)
             << std::string(35, '-')
 #endif
-#if defined(__AVX512F__)
+#if defined(__AVX512F__) && defined(AVX512_ON)
               << std::string(35, '-')
 #endif
             << std::endl;
@@ -119,7 +121,7 @@ void benchmark() {
         auto avx2_times = run_benchmark_add(N, RUNS, add_matrix_avx2);
 #endif
 
-#if defined(__AVX512F__)
+#if defined(__AVX512F__) && defined(AVX512_ON)
         auto avx512_times = run_benchmark_add(N, RUNS, add_matrix_avx512);
 #endif
 
@@ -127,7 +129,7 @@ void benchmark() {
 #if defined(__AVX2__)
         const double avx2_avg = calculate_average(avx2_times);
 #endif
-#if defined(__AVX512F__)
+#if defined(__AVX512F__) && defined(AVX512_ON)
         const double avx512_avg = calculate_average(avx512_times);
 #endif
 
@@ -137,7 +139,7 @@ void benchmark() {
                 << std::setw(15) << avx2_avg
                 << std::setw(20) << scalar_avg / avx2_avg
 #endif
-#if defined(__AVX512F__)
+#if defined(__AVX512F__) && defined(AVX512_ON)
                   << std::setw(15) << avx512_avg
                   << std::setw(20) << scalar_avg / avx512_avg
 #endif
@@ -151,7 +153,7 @@ void benchmark() {
             << std::setw(15) << "AVX2"
             << std::setw(20) << "AVX2 Acceleration"
 #endif
-#if defined(__AVX512F__)
+#if defined(__AVX512F__) && defined(AVX512_ON)
               << std::setw(15) << "AVX512"
               << std::setw(20) << "AVX512 Acceleration"
 #endif
@@ -161,7 +163,7 @@ void benchmark() {
 #if defined(__AVX2__)
             << std::string(35, '-')
 #endif
-#if defined(__AVX512F__)
+#if defined(__AVX512F__) && defined(AVX512_ON)
               << std::string(35, '-')
 #endif
             << std::endl;
@@ -176,7 +178,7 @@ void benchmark() {
         auto avx2_times = run_benchmark_mul(N, RUNS, mul_matrix_avx2);
 #endif
 
-#if defined(__AVX512F__)
+#if defined(__AVX512F__) && defined(AVX512_ON)
         auto avx512_times = run_benchmark_mul(N, RUNS, mul_matrix_avx512);
 #endif
 
@@ -184,7 +186,7 @@ void benchmark() {
 #if defined(__AVX2__)
         const double avx2_avg = calculate_average(avx2_times);
 #endif
-#if defined(__AVX512F__)
+#if defined(__AVX512F__) && defined(AVX512_ON)
         const double avx512_avg = calculate_average(avx512_times);
 #endif
 
@@ -194,7 +196,7 @@ void benchmark() {
                 << std::setw(15) << avx2_avg
                 << std::setw(20) << scalar_avg / avx2_avg
 #endif
-#if defined(__AVX512F__)
+#if defined(__AVX512F__) && defined(AVX512_ON)
                   << std::setw(15) << avx512_avg
                   << std::setw(20) << scalar_avg / avx512_avg
 #endif
