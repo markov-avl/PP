@@ -8,8 +8,9 @@
 #include "sum.h"
 #include "mul.h"
 
-constexpr size_t MAX_EXP = 12;
-constexpr size_t RUNS = 10;
+constexpr size_t MAX_EXP_SUM = 14;
+constexpr size_t MAX_EXP_MUL = 10;
+constexpr size_t RUNS = 5;
 
 // Функция для вычисления среднего времени выполнения (без учета минимума и максимума)
 double calculate_average(std::vector<double> &times) {
@@ -84,7 +85,7 @@ std::vector<double> run_benchmark_mul(const size_t N, const size_t runs,
 }
 
 void benchmark() {
-    const int nxn_width = static_cast<int>(std::to_string(1 << MAX_EXP).size()) * 2 + 2;
+    const int nxn_width = static_cast<int>(std::to_string(1 << MAX_EXP_SUM).size()) * 2 + 2;
 
     std::cout << "=== Addition Benchmark ===\n";
     std::cout << std::left << std::setw(nxn_width) << "NxN"
@@ -108,7 +109,7 @@ void benchmark() {
 #endif
             << std::endl;
 
-    for (size_t exp = 1; exp <= MAX_EXP; ++exp) {
+    for (size_t exp = 1; exp <= MAX_EXP_SUM; ++exp) {
         size_t N = 1 << exp;
 
         // Прогоны для сложения
@@ -165,7 +166,7 @@ void benchmark() {
 #endif
             << std::endl;
 
-    for (size_t exp = 1; exp <= MAX_EXP; ++exp) {
+    for (size_t exp = 1; exp <= MAX_EXP_MUL; ++exp) {
         size_t N = 1 << exp;
 
         // Прогоны для умножения
