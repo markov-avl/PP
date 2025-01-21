@@ -102,6 +102,7 @@ int main() {
     run_all_tests(RECURSIVE);
     run_all_tests(RECURSIVE_STEPPED);
     run_all_tests(RECURSIVE_TASKED);
+    run_all_tests(RECURSIVE_PARALLEL);
     run_all_tests(ITERATIVE);
     run_all_tests(ITERATIVE_PARALLEL);
     return 0;

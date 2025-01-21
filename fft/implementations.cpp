@@ -1,6 +1,10 @@
 #include "bit_shuffle.h"
 #include "implementations.h"
 
+#include <omp.h>
+#include <thread>
+#include <vector>
+
 
 void transform(Complex *output, const size_t n) {
     const size_t half = n / 2;
@@ -44,13 +48,42 @@ void fft_recursive_tasked(Complex *data, const size_t n) {
     }
 
     const size_t half = n / 2;
-#pragma omp task
+    const auto data_2 = data + half;
+#pragma omp task shared(data)
     fft_recursive_tasked(data, half);
-#pragma omp task
-    fft_recursive_tasked(data + half, half);
+#pragma omp task shared(data_2)
+    fft_recursive_tasked(data_2, half);
 #pragma omp taskwait
 
     transform(data, n);
+}
+
+void fft_recursive_parallel(Complex *data, const std::size_t n, const std::size_t thread_count) {
+    if (n <= 1) {
+        return;
+    }
+
+    const std::size_t half = n / 2;
+
+    if (thread_count > 1) {
+        std::vector<std::thread> threads;
+        threads.emplace_back([&] {
+            fft_recursive_parallel(data, half, thread_count / 2);
+        });
+        fft_recursive_parallel(data + half, half, thread_count / 2);
+        for (auto &t: threads) {
+            t.join();
+        }
+    } else {
+        fft_recursive_parallel(data, half, 1);
+        fft_recursive_parallel(data + half, half, 1);
+    }
+
+    for (std::size_t k = 0; k < half; ++k) {
+        Complex t = std::polar(1.0, -2.0 * std::numbers::pi_v<double> * static_cast<double>(k) / static_cast<double>(n)) * data[half + k];
+        data[half + k] = data[k] - t;
+        data[k] += t;
+    }
 }
 
 void fft_iterative(Complex *data, const std::size_t n) {
@@ -112,6 +145,10 @@ void fft(const Complex *input, Complex *output, const size_t n, const Algorithm 
         case RECURSIVE_TASKED:
             bit_shuffle(input, output, n);
             fft_recursive_tasked(output, n);
+            break;
+        case RECURSIVE_PARALLEL:
+            bit_shuffle(input, output, n);
+            fft_recursive_parallel(output, n, std::thread::hardware_concurrency());
             break;
         case ITERATIVE:
             bit_shuffle(input, output, n);

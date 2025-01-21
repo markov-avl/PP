@@ -10,11 +10,12 @@
 using namespace std;
 using namespace chrono;
 
-void run_experiments(size_t max_power) {
+void run_experiments(const size_t max_power) {
     vector<string> algorithm_names = {
         "Recursive",
         "Recursive Stepped",
         "Recursive Tasked",
+        "Recursive Parallel",
         "Iterative",
         "Iterative Parallel"
     };
@@ -27,7 +28,7 @@ void run_experiments(size_t max_power) {
     cout << string(15 + algorithm_names.size() * 20, '-') << endl;
 
     for (size_t power = 1; power <= max_power; ++power) {
-        size_t n = 1 << power;
+        const size_t n = 1 << power;
         vector<Complex> input(n), output(n);
 
         for (size_t i = 0; i < n; ++i) {
@@ -47,7 +48,7 @@ void run_experiments(size_t max_power) {
             }
 
             auto end_time = high_resolution_clock::now();
-            auto duration = duration_cast<microseconds>(end_time - start_time).count();
+            const auto duration = duration_cast<microseconds>(end_time - start_time).count();
 
             cout << setw(20) << duration;
         }
@@ -57,7 +58,7 @@ void run_experiments(size_t max_power) {
 }
 
 int main() {
-    size_t max_power = 22; // Максимальная степень 2
+    size_t max_power = 22;
 
     try {
         run_experiments(max_power);
